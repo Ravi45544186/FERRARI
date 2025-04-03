@@ -6,6 +6,17 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
 
+  const apiUrl = 'https://mustang-k8xi.onrender.com';
+  fetch(apiUrl)
+    .then(response => response.json())
+    .then(data => {
+      console.log('Fetched todos:', data);
+    })
+    .catch(error => {
+      console.error('Error fetching todos:', error);
+    });
+  
+
   // Fetch todos from the backend
   useEffect(() => {
     axios.get('http://localhost:5000/todos')
