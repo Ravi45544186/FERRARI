@@ -26,17 +26,30 @@ function App() {
       .catch(error => console.error('Error fetching todos:', error));
   }, []);
 
-  // Add a new to-do
-  const addTodo = () => {
-    if (newTodo.trim()) {
-      axios.post('http://localhost:5000/todos', { text: newTodo })
-        .then(response => {
-          setTodos([...todos, response.data]);
-          setNewTodo('');
-        })
-        .catch(error => console.error('Error adding todo:', error));
+  const addTodo = async (newTodo) => {
+    const apiUrl = 'https://mustang-k8xi.onrender.com/todos';  // Replace with your backend URL
+  
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newTodo),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data = await response.json();
+      console.log('Todo added:', data);
+      // Handle success (maybe update the UI)
+    } catch (error) {
+      console.error('Error adding todo:', error);
     }
   };
+  
 
   // Toggle completion status of a to-do
   const toggleTodo = (id) => {
@@ -49,6 +62,26 @@ function App() {
       })
       .catch(error => console.error('Error toggling todo:', error));
   };
+
+  const deleteTodo = async (id) => {
+    const apiUrl = `https://mustang-k8xi.onrender.com/todos/${id}`;
+  
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'DELETE',
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to delete todo');
+      }
+  
+      console.log('Todo deleted successfully');
+      // Update the UI (e.g., remove the todo from the list)
+    } catch (error) {
+      console.error('Error deleting todo:', error);
+    }
+  };
+  
 
   // Remove a to-do
   const removeTodo = (id) => {
