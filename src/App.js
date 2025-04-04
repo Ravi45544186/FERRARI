@@ -83,15 +83,7 @@ function App() {
   };
   
 
-  // Remove a to-do
-  const removeTodo = (id) => {
-    axios.delete(`http://localhost:5000/todos/${id}`)
-      .then(() => {
-        setTodos(todos.filter(todo => todo.id !== id));
-      })
-      .catch(error => console.error('Error deleting todo:', error));
-  };
-
+  
   return (
     <div className="App">
       <h1>To-Do App</h1>
