@@ -63,25 +63,15 @@ function App() {
       .catch(error => console.error('Error toggling todo:', error));
   };
 
-  const deleteTodo = async (id) => {
-    const apiUrl = `https://mustang-k8xi.onrender.com/todos/${id}`;
   
-    try {
-      const response = await fetch(apiUrl, {
-        method: 'DELETE',
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to delete todo');
-      }
-  
-      console.log('Todo deleted successfully');
-      // Update the UI (e.g., remove the todo from the list)
-    } catch (error) {
-      console.error('Error deleting todo:', error);
-    }
-  };
-  
+// Remove a to-do
+const removeTodo = (id) => {
+  axios.delete(`http://localhost:5000/todos/${id}`)
+    .then(() => {
+      setTodos(todos.filter(todo => todo.id !== id));
+    })
+    .catch(error => console.error('Error deleting todo:', error));
+};
 
   
   return (
