@@ -6,74 +6,72 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
 
-  const apiUrl = 'https://mustang-k8xi.onrender.com';
-  fetch(apiUrl)
-    .then(response => response.json())
-    .then(data => {
-      console.log('Fetched todos:', data);
-    })
-    .catch(error => {
-      console.error('Error fetching todos:', error);
-    });
-  
+  const apiUrl = 'https://mustang-k8xi.onrender.com'; // Replace with your backend URL
 
   // Fetch todos from the backend
   useEffect(() => {
-    axios.get('http://localhost:5000/todos')
+    axios.get(`${apiUrl}/todos`)
       .then(response => {
         setTodos(response.data);
       })
       .catch(error => console.error('Error fetching todos:', error));
   }, []);
 
-  const addTodo = async (newTodo) => {
-    const apiUrl = 'https://mustang-k8xi.onrender.com/todos';  // Replace with your backend URL
-  
+  // Add a new todo
+  const addTodo = async () => {
+    if (!newTodo) return; // Do not add if input is empty
+
+    const todoData = {
+      text: newTodo,
+      completed: false,  // New todo should be initially incomplete
+    };
+
     try {
-      const response = await fetch(apiUrl, {
+      const response = await fetch(`${apiUrl}/todos`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newTodo),
+        body: JSON.stringify(todoData),
       });
-  
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-  
+
       const data = await response.json();
       console.log('Todo added:', data);
-      // Handle success (maybe update the UI)
+      setTodos([...todos, data]);  // Add the new todo to the state
+      setNewTodo('');  // Clear input field
     } catch (error) {
       console.error('Error adding todo:', error);
     }
   };
-  
 
   // Toggle completion status of a to-do
   const toggleTodo = (id) => {
-    axios.put(`http://localhost:5000/todos/${id}`)
+    const todo = todos.find(t => t._id === id);
+    const updatedTodo = { ...todo, completed: !todo.completed };
+
+    axios.put(`${apiUrl}/todos/${id}`, updatedTodo)
       .then(response => {
         const updatedTodos = todos.map(todo =>
-          todo.id === id ? response.data : todo
+          todo._id === id ? response.data : todo
         );
         setTodos(updatedTodos);
       })
       .catch(error => console.error('Error toggling todo:', error));
   };
 
-  
-// Remove a to-do
-const removeTodo = (id) => {
-  axios.delete(`http://localhost:5000/todos/${id}`)
-    .then(() => {
-      setTodos(todos.filter(todo => todo.id !== id));
-    })
-    .catch(error => console.error('Error deleting todo:', error));
-};
+  // Remove a to-do
+  const removeTodo = (id) => {
+    axios.delete(`${apiUrl}/todos/${id}`)
+      .then(() => {
+        setTodos(todos.filter(todo => todo._id !== id));  // Remove the todo from state
+      })
+      .catch(error => console.error('Error deleting todo:', error));
+  };
 
-  
   return (
     <div className="App">
       <h1>To-Do App</h1>
@@ -88,9 +86,9 @@ const removeTodo = (id) => {
 
       <ul>
         {todos.map(todo => (
-          <li key={todo.id} style={{ textDecoration: todo.isComplete ? 'line-through' : 'none' }}>
-            <span onClick={() => toggleTodo(todo.id)}>{todo.text}</span>
-            <button onClick={() => removeTodo(todo.id)}>Delete</button>
+          <li key={todo._id} style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
+            <span onClick={() => toggleTodo(todo._id)}>{todo.text}</span>
+            <button onClick={() => removeTodo(todo._id)}>Delete</button>
           </li>
         ))}
       </ul>
