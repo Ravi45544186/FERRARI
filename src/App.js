@@ -34,35 +34,26 @@ function App() {
       completed: false,  // New todo should be initially incomplete
     };
 
-    const addTodo = async () => {
-      if (!newTodo) return; // Do not add if input is empty
-    
-      const todoData = {
-        text: newTodo,
-        completed: false,  // New todo should be initially incomplete
-      };
-    
-      setLoading(true);
-      setError(''); // Clear any previous errors
-    
-      try {
-        const response = await axios.post(`${apiUrl}/todos`, todoData);
-        console.log('Todo added:', response.data);
-        setTodos([...todos, response.data]);  // Add the new todo to the state
-        setNewTodo('');  // Clear input field
-      } catch (error) {
-        // Detailed error logging
-        console.error('Error adding todo:', error.response || error);
-        if (error.response) {
-          setError(`Error adding todo: ${error.response.data.message || error.response.statusText}`);
-        } else {
-          setError('Error adding todo');
-        }
-      } finally {
-        setLoading(false);
+    setLoading(true);
+    setError(''); // Clear any previous errors
+
+    try {
+      const response = await axios.post(`${apiUrl}/todos`, todoData);
+      console.log('Todo added:', response.data);
+      setTodos([...todos, response.data]);  // Add the new todo to the state
+      setNewTodo('');  // Clear input field
+    } catch (error) {
+      // Detailed error logging
+      console.error('Error adding todo:', error.response || error);
+      if (error.response) {
+        setError(`Error adding todo: ${error.response.data.message || error.response.statusText}`);
+      } else {
+        setError('Error adding todo');
       }
-    };
-    
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Toggle completion status of a to-do
   const toggleTodo = (id) => {
