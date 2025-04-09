@@ -9,6 +9,7 @@ function App() {
   const [error, setError] = useState('');  // To handle error state
 
   const apiUrl = 'https://mustang-k8xi.onrender.com'; // Replace with your backend URL
+  // Local backend URL
 
   // Fetch todos from the backend
   useEffect(() => {
@@ -123,7 +124,7 @@ function App() {
       <h1>To-Do App</h1>
 
       {loading && <p>Loading...</p>} {/* Show loading indicator */}
-      {error && <p style={{ color: 'blue' }}>{error}</p>} {/* Show error message */}
+      {error && <p style={{ color: 'red' }}>{error}</p>} {/* Show error message */}
 
       <input
         type="text"
@@ -140,7 +141,8 @@ function App() {
               {todo.text}
             </span>
             <div>
-              <button onClick={() => updateTodo(todo._id, todo.text)} disabled={loading}>Update</button>
+              <button onClick={() => updateTodo(todo._id, todo.text)} disabled={loading}className="update-button">Update</button>
+
               <button onClick={() => removeTodo(todo._id)} disabled={loading}>Delete</button>
             </div>
           </li>
