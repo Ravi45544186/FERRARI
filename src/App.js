@@ -141,7 +141,7 @@ function App() {
               {todo.text}
             </span>
             <div>
-              <button onClick={() => updateTodo(todo._id, todo.text)} disabled={loading}className="update-button">Update</button>
+              <button onClick={() => updateTodo(todo._id, todo.text)} disabled={loading}className=".update-button">Update</button>
 
               <button onClick={() => removeTodo(todo._id)} disabled={loading}>Delete</button>
             </div>
