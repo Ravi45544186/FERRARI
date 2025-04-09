@@ -123,7 +123,7 @@ function App() {
       <h1>To-Do App</h1>
 
       {loading && <p>Loading...</p>} {/* Show loading indicator */}
-      {error && <p style={{ color: 'red' }}>{error}</p>} {/* Show error message */}
+      {error && <p style={{ color: 'blue' }}>{error}</p>} {/* Show error message */}
 
       <input
         type="text"
