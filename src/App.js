@@ -93,6 +93,31 @@ function App() {
       .finally(() => setLoading(false));
   };
 
+  // Update a to-do
+  const updateTodo = async (id, oldText) => {
+    const newText = prompt('Update your to-do:', oldText);
+
+    if (!newText || newText === oldText) return;  // Do nothing if the input is empty or same as old text
+
+    const updatedTodo = { text: newText };
+
+    setLoading(true);
+    setError(''); // Clear any previous errors
+
+    try {
+      const response = await axios.put(`${apiUrl}/todos/${id}`, updatedTodo);
+      const updatedTodos = todos.map(todo =>
+        todo._id === id ? response.data : todo
+      );
+      setTodos(updatedTodos);
+    } catch (error) {
+      console.error('Error updating todo:', error);
+      setError('Error updating todo');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="App">
       <h1>To-Do App</h1>
@@ -114,7 +139,10 @@ function App() {
             <span onClick={() => toggleTodo(todo._id)} style={{ cursor: 'pointer' }}>
               {todo.text}
             </span>
-            <button onClick={() => removeTodo(todo._id)} disabled={loading}>Delete</button>
+            <div>
+              <button onClick={() => updateTodo(todo._id, todo.text)} disabled={loading}>Update</button>
+              <button onClick={() => removeTodo(todo._id)} disabled={loading}>Delete</button>
+            </div>
           </li>
         ))}
       </ul>
